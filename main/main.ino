@@ -1,61 +1,52 @@
 #include "esp32-mqtt.h"
 #include <Arduino.h>
 
-const int USB1_CTRL = 16;
-const int USB2_CTRL = 17;
-const int USB3_CTRL = 5;
-const int USBC_CTRL = 18;
+#include "ControlledCurrentSensor.h"
 
-const int CURRENT_SENSE_X = 36;
-const int CURRENT_SENSE_Y = 39;
-const int CURRENT_SENSE_W = 34;
-const int CURRENT_SENSE_Z = 35;
+#include "hardwareconfig.h"
 
-int[4] USB_CTRLS;
-int[4] CURRENT_SENSORS;
+ControlledCurrentSensor *usb1;
+ControlledCurrentSensor *usb2;
+ControlledCurrentSensor *usb3;
+ControlledCurrentSensor *usbC;
 
-const int ADC_RESOLUTION = 12; // The bit resolution of the ADC
-
-int NUMBER_OF_SENSORS;
-
-void getCurrentMeasurements(){
-  int measurements[NUMBER_OF_CURRENT_SENSORS];
-
-  for (int i = 0; i < NUMBER_OF_CURRENT_SENSORS; i++){
-    measurements[i] = analogRead(CURRENT_SENSORS[i]);
-  }
-}
+const int NUMBER_OF_CURRENT_SENSORS = 4;
+ControlledCurrentSensor CURRENT_SENSORS[NUMBER_OF_CURRENT_SENSORS];
 
 void setup() {
-  // put your setup code here, to run once:
-  USB_CTRLS = [USB1_CTRL, USB2_CTRL, USB3_CTRL, USBC_CTRL];
-  CURRENT_SENSORS = [CURRENT_SENSE_X, CURRENT_SENSE_Y, CURRENT_SENSE_W, CURRENT_SENSE_Z];
+  // initialize 4 controlled current sensors using the pins defined in the hardwareconfig file
+  usb1 = new ControlledCurrentSensor((char*)"USB1 Current Sensor", CURRENT_SENSOR_USB1, 5, USB1_CTRL);
+  usb2 = new ControlledCurrentSensor((char*)"USB2 Current Sensor", CURRENT_SENSOR_USB2, 5, USB2_CTRL);
+  usb3 = new ControlledCurrentSensor((char*)"USB3 Current Sensor", CURRENT_SENSOR_USB3, 5, USB3_CTRL);
+  usbC = new ControlledCurrentSensor((char*)"USBC Current Sensor", CURRENT_SENSOR_USBC, 5, USBC_CTRL);
 
-  NUMBER_OF_CURRENT_SENSORS = sizeof CURRENT_SENSORS/ sizeof CURRENT_SENSORS[0];
+  // setup the data structures
+  CURRENT_SENSORS[0] = *usb1;
+  CURRENT_SENSORS[1] = *usb2;
+  CURRENT_SENSORS[2] = *usb3;
+  CURRENT_SENSORS[3] = *usbC;
 
-  for (int usb_ctrl : USB_CTRLS)
-  {
-    pinMode(usb_ctrl, OUTPUT);
+  for (ControlledCurrentSensor cs : CURRENT_SENSORS){
+    cs.powerOn();
   }
-  
-  for (int current_sensor : CURRENT_SENSORS)
-  {
-    pinMode(current_sensor, INPUT);
-  }
 
-  analogReadResolution(ADC_RESOLUTION)
+  analogReadResolution(ADC_RESOLUTION);
   setupCloudIoT();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  //
   mqtt->loop();
   delay(10);  // <- fixes some issues with WiFi stability
 
-  if (!mqttClient->connected()) {
+  while (!mqttClient->connected()) {
     connect();
   }
 
-  delay(1000);
-  getCurrentMeasurements();
+  // ask every current sensor to publish their measurements to the cloud
+  for (ControlledCurrentSensor cs : CURRENT_SENSORS){
+    String message = cs.getMeasurementMessage();
+    publishTelemetry(message);
+    delay(1000);
+  }
 }
