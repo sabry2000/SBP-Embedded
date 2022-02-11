@@ -12,6 +12,7 @@ class ControlledCurrentSensor : public CurrentSensor {
     ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage, int controlPinNumber);
     void powerOff();
     void powerOn();
+    bool isPoweredOn();
 };
 
 ControlledCurrentSensor::ControlledCurrentSensor(): CurrentSensor() {}
@@ -32,4 +33,8 @@ void ControlledCurrentSensor::powerOff() {
 
 void ControlledCurrentSensor::powerOn() {
   digitalWrite(this->controlPinNumber, HIGH);
+}
+
+bool ControlledCurrentSensor::isPoweredOn(){
+  return (this->getCurrent() > 0.5);
 }
