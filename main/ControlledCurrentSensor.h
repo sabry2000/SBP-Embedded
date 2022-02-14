@@ -6,20 +6,13 @@ class ControlledCurrentSensor : public CurrentSensor {
     int controlPinNumber;
 
    public:
-    ControlledCurrentSensor();
-    ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage);
-
     ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage, int controlPinNumber);
     void powerOff();
     void powerOn();
     bool isPoweredOn();
 };
 
-ControlledCurrentSensor::ControlledCurrentSensor(): CurrentSensor() {}
-
-ControlledCurrentSensor::ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage) : CurrentSensor(sensorName, measurementPinNumber, voltage) {}
-
-ControlledCurrentSensor::ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage, int controlPinNumber) :  ControlledCurrentSensor(sensorName, measurementPinNumber, voltage) {
+ControlledCurrentSensor::ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage, int controlPinNumber) :  CurrentSensor(sensorName, measurementPinNumber, voltage) {
   this->controlPinNumber = controlPinNumber;
 
   pinMode(controlPinNumber, OUTPUT);
@@ -36,5 +29,5 @@ void ControlledCurrentSensor::powerOn() {
 }
 
 bool ControlledCurrentSensor::isPoweredOn(){
-  return (this->getCurrent() > 0.5);
+  return (this->getMeasurement() > 0.5);
 }
