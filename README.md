@@ -20,3 +20,10 @@ The following links are useful to help configure the Arduino Environment
 [Espressif Arduino Core Documentation](https://docs.espressif.com/projects/arduino-esp32/en/latest/index.html)  
 [Example Tutorial](https://www.instructables.com/How-to-Add-WiFi-Control-to-Any-Project-ESP32-Begin/)  
 
+
+## Useful tutorials  
+[Intro to ESP32](https://www.electronicshub.org/getting-started-with-esp32/)  
+[EEPROM for ESP32](https://randomnerdtutorials.com/esp32-flash-memory/)  
+[Google Cloud Platform for ESP32](https://www.youtube.com/watch?v=lRX8O1tzkpA)  
+[ESP32 Multithreading 1](https://randomnerdtutorials.com/esp32-dual-core-arduino-ide/)  
+[ESP32 Multithreading 2](https://www.instructables.com/ESP32-With-Arduino-IDE-Multi-Core-Programming/)

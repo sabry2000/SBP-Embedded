@@ -8,7 +8,3 @@ class Sensor{
     char *sensorName;
     int measurementPinNumber;
 };
-
-double Sensor::getMeasurement() {
-  return analogRead(this->measurementPinNumber);
-}
