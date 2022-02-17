@@ -11,7 +11,8 @@ well-documented, and is great for beginners.
 3) Now you need to add all the necessary libraries to compile the program. Go to Sketch -> Include Library -> Manage Libraries and add the following libraries:  
     - Google Cloud IoT Core JWT  
     - PubSubClient  
-    - MQTT  
+    - MQTT 
+    - Vector 
 4) Go to Tools -> Board -> ESP32 Arduino. Select any ESP32 board.
 5) Verify that the sketch compiles without errors. (Sketch -> Verify)
 
