@@ -1,16 +1,28 @@
 #include <Arduino.h>
+#include "Sensor.h"
 #include "CurrentSensor.h"
 
-CurrentSensor::CurrentSensor(char *sensorName, int measurementPinNumber, double voltage) {
-  this->sensorName = sensorName;
-  this->measurementPinNumber = measurementPinNumber;
+CurrentSensor::CurrentSensor(char *sensorName, int measurementPinNumber, double voltage) : Sensor(sensorName, measurementPinNumber){
   this->voltage = voltage;
+}
 
-  pinMode(measurementPinNumber, INPUT);
+//TODO
+CurrentSensor::~CurrentSensor(){
+  
 }
 
 double CurrentSensor::getVoltage() {
   return this->voltage;
+}
+
+Sensor::SensorType CurrentSensor::isType(){
+  return SensorType::CURRENT_SENSOR;
+}
+
+//TODO
+double CurrentSensor::getMeasurement(){
+  double current = 0;
+  return current;
 }
 
 String CurrentSensor::getMeasurementMessage() {

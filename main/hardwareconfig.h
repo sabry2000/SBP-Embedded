@@ -9,5 +9,6 @@ const int CURRENT_SENSOR_USB3 = 34;
 const int CURRENT_SENSOR_USBC = 35;
 
 const int HUMIDITY_SENSOR = 32;
+const int TEMPERATURE_SENSOR_PIN = 13;
 
 const int ADC_RESOLUTION = 12; // The bit resolution of the ADC

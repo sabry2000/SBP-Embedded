@@ -1,3 +1,7 @@
+#pragma once
+#ifndef CONTROLLEDCURRENTSENSOR_H
+#define CONTROLLEDCURRENTSENSOR_H
+
 #include "CurrentSensor.h"
 
 class ControlledCurrentSensor : public CurrentSensor {
@@ -6,7 +10,13 @@ class ControlledCurrentSensor : public CurrentSensor {
 
    public:
     ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage, int controlPinNumber);
+    virtual ~ControlledCurrentSensor();
+
+    SensorType isType();
+    
     void powerOff();
     void powerOn();
     bool isPoweredOn();
 };
+
+#endif

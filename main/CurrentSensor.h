@@ -1,15 +1,20 @@
-#include <Arduino.h>
+#pragma once
+#ifndef CURRENTSENSOR_H
+#define CURRENTSENSOR_H
 
 #include "Sensor.h"
 
 class CurrentSensor : public Sensor {
-  protected:
-    char *sensorName;
-    int measurementPinNumber;
+  private:
     double voltage;
   public:
     CurrentSensor(char *sensorName, int measurementPinNumber, double voltage);
+    virtual ~CurrentSensor();
 
-    double getVoltage();
     String getMeasurementMessage();
+    SensorType isType();
+    double getMeasurement();
+    double getVoltage();
 };
+
+#endif
