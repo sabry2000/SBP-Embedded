@@ -1,88 +1,68 @@
 #include <Arduino.h>
 #include <Vector.h>
 
-#include "esp32-mqtt.h"
+#include "hardware_config.h"
+#include "sensor_config.h"
 
-#include "hardwareconfig.h"
-
-#include "ControlledCurrentSensor.h"
-#include "TemperatureSensor.h"
 #include "Sensor.h"
+#include "TemperatureSensor.h"
+#include "CurrentSensor.h"
+#include "ControlledCurrentSensor.h"
 
-TaskHandle_t IOTCommunicationTaskHandle;
-TaskHandle_t ActionExecutionTaskHandle;
+#include "SystemController.h"
 
-ControlledCurrentSensor *usb1;
-ControlledCurrentSensor *usb2;
-ControlledCurrentSensor *usb3;
-ControlledCurrentSensor *usbC;
-TemperatureSensor *tempSensor;
+TaskHandle_t SystemMonitorTaskHandle;
+TaskHandle_t SystemRegulatorTaskHandle;
 
-Sensor* SENSORS[5] = {};
+SystemController *sysController;
 
-void GCPCommunication( void * pvParameters ){
-  // Sending data to server function
-  mqtt->loop();
-  delay(10);  // <- fixes some issues with WiFi stability
-
-  while (!mqttClient->connected()) {
-    connect();
-  }
-
-  // ask every current sensor to publish their measurements to the cloud
-  for (Sensor* snsr : SENSORS){
-    String message = snsr->getMeasurementMessage();
-    publishTelemetry(message);
-    delay(1000);
-  }
+void MonitorSystem( void * pvParameters ){
+  sysController->monitorSystem();
 }
 
-void ExecuteActions( void * pvParameters ){
-    // TODO: discuss with Murad how to get data from server
+void RegulateSystem( void * pvParameters ){
+  sysController->regulateSystem();
 }
 
 void setup() {
-  // initialize all different kinds of sensors using the pins defined in the hardwareconfig file
-  usb1 = new ControlledCurrentSensor((char*)"USB1 Current Sensor", CURRENT_SENSOR_USB1, 5, USB1_CTRL);
-  usb2 = new ControlledCurrentSensor((char*)"USB2 Current Sensor", CURRENT_SENSOR_USB2, 5, USB2_CTRL);
-  usb3 = new ControlledCurrentSensor((char*)"USB3 Current Sensor", CURRENT_SENSOR_USB3, 5, USB3_CTRL);
-  usbC = new ControlledCurrentSensor((char*)"USBC Current Sensor", CURRENT_SENSOR_USBC, 5, USBC_CTRL);
-  tempSensor = new TemperatureSensor((char*)"Temperature Sensor", TEMPERATURE_SENSOR_PIN);
+  analogReadResolution(ADC_RESOLUTION);
+
+  // initialize all different kinds of sensors using the pins defined in the hardware_config and sensor_config file
+  CurrentSensor cc = CurrentSensor(CHARGE_CONTROLLER_CURRENT_SENSOR_ID, CHARGE_CONTROLLER_CURRRENT_SENSOR_PIN, 5);
+  ControlledCurrentSensor usb1 = ControlledCurrentSensor(USB1_CURRENT_SENSOR_ID, USB1_CURRENT_SENSOR_PIN, 5, USB1_CTRL_PIN);
+  ControlledCurrentSensor usb2 = ControlledCurrentSensor(USB2_CURRENT_SENSOR_ID, USB2_CURRENT_SENSOR_PIN, 5, USB2_CTRL_PIN);
+  ControlledCurrentSensor usb3 = ControlledCurrentSensor(USB3_CURRENT_SENSOR_ID, USB3_CURRENT_SENSOR_PIN, 5, USB3_CTRL_PIN);
+  ControlledCurrentSensor usbC = ControlledCurrentSensor(USB4_CURRENT_SENSOR_ID, USBC_CURRENT_SENSOR_PIN, 5, USBC_CTRL_PIN);
+  TemperatureSensor tempSensor = TemperatureSensor(TEMPERATURE_SENSOR_ID, TEMPERATURE_SENSOR_PIN);
 
   // setup the data structures
-  SENSORS[0] = usb1;
-  SENSORS[1] = usb2;
-  SENSORS[2] = usb3;
-  SENSORS[3] = usbC;
-  SENSORS[4] = tempSensor;
+  Vector<Sensor*> SENSORS;
+  SENSORS.push_back(&cc);
+  SENSORS.push_back(&usb1);
+  SENSORS.push_back(&usb2);
+  SENSORS.push_back(&usb3);
+  SENSORS.push_back(&usbC);
+  SENSORS.push_back(&tempSensor);
 
-  for (Sensor* snsr : SENSORS){
-    if (snsr->isType() == Sensor::SensorType::CONTROLLED_CURRENT_SENSOR){
-          ControlledCurrentSensor* temp = (ControlledCurrentSensor*)snsr;
-          temp->powerOn();
-    }
-  }
-
-  analogReadResolution(ADC_RESOLUTION);
-  setupCloudIoT();
+  sysController = new SystemController(SENSORS);
 
   xTaskCreatePinnedToCore(
-    GCPCommunication,             /* Task function. */
-    "IOT Communication",           /* name of task. */
-    10000,                        /* Stack size of task */
-    NULL,                         /* parameter of the task */
-    1,                            /* priority of the task */
-    &IOTCommunicationTaskHandle,  /* Task handle to keep track of created task */
-    0                             /* pin task to core 0 */
-  );
-
-  xTaskCreatePinnedToCore(
-    ExecuteActions,                     /* Task function. */
-    "Action Execution",                 /* name of task. */
+    MonitorSystem,                      /* Task function. */
+    "System Monitoring Task",           /* name of task. */
     10000,                              /* Stack size of task */
     NULL,                               /* parameter of the task */
     1,                                  /* priority of the task */
-    &ActionExecutionTaskHandle,         /* Task handle to keep track of created task */
+    &SystemMonitorTaskHandle,           /* Task handle to keep track of created task */
+    0                                   /* pin task to core 0 */
+  );
+
+  xTaskCreatePinnedToCore(
+    RegulateSystem,                     /* Task function. */
+    "System Regulating Task",           /* name of task. */
+    10000,                              /* Stack size of task */
+    NULL,                               /* parameter of the task */
+    1,                                  /* priority of the task */
+    &SystemRegulatorTaskHandle,         /* Task handle to keep track of created task */
     1                                   /* pin task to core 1 */
   );
 }

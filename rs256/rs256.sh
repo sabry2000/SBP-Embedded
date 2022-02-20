@@ -9,3 +9,6 @@ openssl rsa -in rs256.rsa -pubout -outform PEM -out rs256.rsa.pub
 # Done
 cat rs256.rsa
 cat rs256.rsa.pub
+
+# Get private key into 32 hex digit pairs
+openssl rsa -in rs256.rsa -noout -text

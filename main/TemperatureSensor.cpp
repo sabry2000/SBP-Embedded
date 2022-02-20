@@ -2,7 +2,7 @@
 #include "Sensor.h"
 #include "TemperatureSensor.h"
 
-TemperatureSensor::TemperatureSensor(char *sensorName, int measurementPinNumber) : Sensor(sensorName, measurementPinNumber){
+TemperatureSensor::TemperatureSensor(int sensorID, int measurementPinNumber) : Sensor(sensorID, measurementPinNumber){
 }
 
 TemperatureSensor::~TemperatureSensor(){
@@ -11,7 +11,7 @@ TemperatureSensor::~TemperatureSensor(){
 
 String TemperatureSensor::getMeasurementMessage(){
   char message[50];
-  sprintf(message, "Temperature Sensor, Temperature: %f", this->getMeasurement());
+  sprintf(message, "Sensor ID: %d, Temperature: %f", this->sensorID, this->getMeasurement());
   return message;
 }
 

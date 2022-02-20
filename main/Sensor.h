@@ -11,17 +11,16 @@ class Sensor{
       TEMPERATURE_SENSOR
     };
 
-
     virtual String getMeasurementMessage() = 0;
     virtual SensorType isType() = 0;
     double getMeasurement();
     virtual ~Sensor() = 0;
   
   protected:
-    char *sensorName;
+    int sensorID;
     int measurementPinNumber;
 
-    Sensor(char* sensorName, int measurementPinNumber);
+    Sensor(int sensorID, int measurementPinNumber);
 };
 
 #endif

@@ -9,7 +9,7 @@ class ControlledCurrentSensor : public CurrentSensor {
     int controlPinNumber;
 
    public:
-    ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage, int controlPinNumber);
+    ControlledCurrentSensor(int sensorID, int measurementPinNumber, double voltage, int controlPinNumber);
     virtual ~ControlledCurrentSensor();
 
     SensorType isType();

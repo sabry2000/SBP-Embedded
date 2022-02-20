@@ -25,6 +25,9 @@ The following links are useful to help configure the Arduino Environment
 ## Useful tutorials  
 [Intro to ESP32](https://www.electronicshub.org/getting-started-with-esp32/)  
 [EEPROM for ESP32](https://randomnerdtutorials.com/esp32-flash-memory/)  
-[Google Cloud Platform for ESP32](https://www.youtube.com/watch?v=lRX8O1tzkpA)  
+[Install Google Cloud](https://geekflare.com/gcloud-installation-guide/)  
+[Install Google Cloud Help](https://stackoverflow.com/questions/31037279/gcloud-command-not-found-while-installing-google-cloud-sdk)
+[Google Cloud Platform for ESP32 1](https://www.youtube.com/watch?v=lRX8O1tzkpA)
+[Google Cloud Platform for ESP32 2](http://nilhcem.com/iot/cloud-iot-core-with-the-esp32-and-arduino)  
 [ESP32 Multithreading 1](https://randomnerdtutorials.com/esp32-dual-core-arduino-ide/)  
 [ESP32 Multithreading 2](https://www.instructables.com/ESP32-With-Arduino-IDE-Multi-Core-Programming/)

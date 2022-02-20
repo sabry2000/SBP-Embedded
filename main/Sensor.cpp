@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "Sensor.h"
 
-Sensor::Sensor(char *sensorName, int measurementPinNumber){
-  this->sensorName = sensorName;
+Sensor::Sensor(int sensorID, int measurementPinNumber){
+  this->sensorID = sensorID;
   this->measurementPinNumber = measurementPinNumber;
 
   pinMode(measurementPinNumber, INPUT);

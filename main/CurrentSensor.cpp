@@ -2,7 +2,7 @@
 #include "Sensor.h"
 #include "CurrentSensor.h"
 
-CurrentSensor::CurrentSensor(char *sensorName, int measurementPinNumber, double voltage) : Sensor(sensorName, measurementPinNumber){
+CurrentSensor::CurrentSensor(int sensorID, int measurementPinNumber, double voltage) : Sensor(sensorID, measurementPinNumber){
   this->voltage = voltage;
 }
 
@@ -27,6 +27,6 @@ double CurrentSensor::getMeasurement(){
 
 String CurrentSensor::getMeasurementMessage() {
   char message[50];
-  sprintf(message, "Current Sensor Name: %s, Current: %f, Voltage: %f", this->sensorName, this->getMeasurement(), this->getVoltage());
+  sprintf(message, "Sensor ID: %d, Current: %f, Voltage: %f", this->sensorID, this->getMeasurement(), this->getVoltage());
   return message;
 }

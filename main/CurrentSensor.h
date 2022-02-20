@@ -8,7 +8,7 @@ class CurrentSensor : public Sensor {
   private:
     double voltage;
   public:
-    CurrentSensor(char *sensorName, int measurementPinNumber, double voltage);
+    CurrentSensor(int sensorID, int measurementPinNumber, double voltage);
     virtual ~CurrentSensor();
 
     String getMeasurementMessage();

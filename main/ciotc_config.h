@@ -15,14 +15,14 @@
 // This file contains your configuration used to connect to Cloud IoT Core
 
 // Wifi network details.
-const char *ssid = "SSID";
-const char *password = "PASSWORD";
+const char *ssid = "SHAW-C69160-5G";
+const char *password = "25114B027150";
 
 // Cloud iot details.
-const char *project_id = "project-id";
+const char *project_id = "sbp-embedded";
 const char *location = "us-central1";
 const char *registry_id = "my-registry";
-const char *device_id = "my-esp32-device";
+const char *device_id = "esp32";
 
 // Configuration for NTP
 const char* ntp_primary = "pool.ntp.org";

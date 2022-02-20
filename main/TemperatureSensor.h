@@ -7,7 +7,7 @@
 class TemperatureSensor : public Sensor{
 
     public:
-        TemperatureSensor(char *sensorName, int measurementPinNumber);
+        TemperatureSensor(int sensorID, int measurementPinNumber);
         virtual ~TemperatureSensor();
         
         String getMeasurementMessage();

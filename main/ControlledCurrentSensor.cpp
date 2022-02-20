@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "ControlledCurrentSensor.h"
 
-ControlledCurrentSensor::ControlledCurrentSensor(char *sensorName, int measurementPinNumber, double voltage, int controlPinNumber) :  CurrentSensor(sensorName, measurementPinNumber, voltage) {
+ControlledCurrentSensor::ControlledCurrentSensor(int sensorID, int measurementPinNumber, double voltage, int controlPinNumber) :  CurrentSensor(sensorID, measurementPinNumber, voltage) {
   this->controlPinNumber = controlPinNumber;
 
   pinMode(controlPinNumber, OUTPUT);
