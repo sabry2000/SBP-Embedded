@@ -1,4 +1,4 @@
-# SBP-Embedded
+ t # SBP-Embedded
 This is the embedded systems repository for the Solar Bench PRoject
 
 ## Guide
@@ -20,6 +20,16 @@ well-documented, and is great for beginners.
 The following links are useful to help configure the Arduino Environment  
 [Espressif Arduino Core Documentation](https://docs.espressif.com/projects/arduino-esp32/en/latest/index.html)  
 [Example Tutorial](https://www.instructables.com/How-to-Add-WiFi-Control-to-Any-Project-ESP32-Begin/)  
+
+## ESP Programming Help Commands  
+[Link 1](https://www.esp32.com/viewtopic.php?t=4061)
+[Link 2](https://githubmemory.com/repo/espressif/esptool/issues/662)
+1) sudo python esptool.py write_flash_status --non-volatile 0
+2) sudo python esptool.py --chip auto --port /dev/cu.usbserial-0001 --baud 115200 --before default_reset --after hard_reset write_flash -u --flash_mode dio --flash_freq 40m --flash_size 4MB 0x0 factory/factory_WROOM-32.bin
+3) sudo python esptool.py --chip auto --port /dev/cu.usbserial-0001 --baud 115200 --before default_reset --after hard_reset write_flash -u --flash_mode dio --flash_freq 40m --flash_size 4MB 0x0 factory/factory_WROVER-32.bin
+4) sudo python esptool.py erase_flash
+5) sudo python esptool.py read_flash_status 
+6) sudo python esptool.py flash_id
 
 
 ## Useful tutorials  

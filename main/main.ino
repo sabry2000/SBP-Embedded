@@ -17,11 +17,15 @@ TaskHandle_t SystemRegulatorTaskHandle;
 SystemController *sysController;
 
 void MonitorSystem( void * pvParameters ){
-  sysController->monitorSystem();
+  while(1){
+    sysController->monitorSystem();
+  }
 }
 
 void RegulateSystem( void * pvParameters ){
-  sysController->regulateSystem();
+  while(1){
+    sysController->regulateSystem();
+  }
 }
 
 void setup() {
