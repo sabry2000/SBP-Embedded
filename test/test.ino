@@ -1,3 +1,5 @@
+#include <FastLED.h>
+
 const int BUTTON_PIN = 23;
 const int LED_PIN = 22;
 int buttonState = 0;
@@ -5,6 +7,16 @@ unsigned long previousTime = 0;
 
 TaskHandle_t SystemMonitorTaskHandle;
 TaskHandle_t SystemRegulatorTaskHandle;
+
+#define DATA_PIN    3
+//#define CLK_PIN   4
+#define LED_TYPE    WS2811
+#define COLOR_ORDER GRB
+#define NUM_LEDS    64
+CRGB leds[NUM_LEDS];
+
+#define BRIGHTNESS          96
+#define FRAMES_PER_SECOND  120
 
 void setup() {
   // put your setup code here, to run once:
