@@ -1,28 +1,34 @@
-#include <FastLED.h>
+#include "LCDDisplay.h"
+#include "LCDDisplayController.h"
 
 const int BUTTON_PIN = 23;
 const int LED_PIN = 22;
-int buttonState = 0;
-unsigned long previousTime = 0;
+
+const int D7 = 21;
+const int D6 = 19;
+const int D5 = 18;
+const int D4 = 5;
+
+const int E = 17;
+const int RS = 16;
+
+volatile int buttonState = 0;
+int command = 0;
 
 TaskHandle_t SystemMonitorTaskHandle;
 TaskHandle_t SystemRegulatorTaskHandle;
 
-#define DATA_PIN    3
-//#define CLK_PIN   4
-#define LED_TYPE    WS2811
-#define COLOR_ORDER GRB
-#define NUM_LEDS    64
-CRGB leds[NUM_LEDS];
-
-#define BRIGHTNESS          96
-#define FRAMES_PER_SECOND  120
+LCDDisplayController* lcdDisplayController;
 
 void setup() {
   // put your setup code here, to run once:
   pinMode(BUTTON_PIN, INPUT_PULLDOWN);
   pinMode(LED_PIN, OUTPUT);
-  //Serial.begin(9600);
+  Serial.begin(9600);
+
+  LCDDisplay lcdDisplay = LCDDisplay(RS, E, D4, D5, D6, D7);
+
+  lcdDisplayController = new LCDDisplayController(lcdDisplay);
 
   xTaskCreatePinnedToCore(
     MonitorSystem,                      /* Task function. */
@@ -45,23 +51,25 @@ void setup() {
   );
 }
 
-void MonitorSystem( void * pvParameters ){
-  while(1){
-      buttonState = digitalRead(BUTTON_PIN);
+void MonitorSystem( void * pvParameters ) {
+  while (1) {
+    buttonState = digitalRead(BUTTON_PIN);
+    delay(1);
   }
 }
 
-void RegulateSystem( void * pvParameters ){
-  while(1){
+void RegulateSystem( void * pvParameters ) {
+  while (1) {
+    Serial.println(buttonState);
     if (buttonState == HIGH) {
-      delay(1000);     
-      digitalWrite(LED_PIN,HIGH);
       delay(1000);
-    }else{
-      digitalWrite(LED_PIN,LOW);
+      digitalWrite(LED_PIN, HIGH);
+      lcdDisplayController->displayNumber(command++);
+      delay(1000);
     }
+    digitalWrite(LED_PIN, LOW);
+    delay(1);
   }
-  //Serial.println(buttonState);
 }
 
 void loop() {}
